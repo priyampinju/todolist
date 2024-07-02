@@ -12,6 +12,11 @@ const Tasks = () => {
   //function to handle deleting a task
   const handleDeleteTask = (id) => {
     dispatch(deleteTask(id)); //dispatch the deleteTask action
+
+    // removing the task from local storage
+    const currentTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    const updatedTasks = currentTasks.filter((task, index) => index !== id);
+    localStorage.setItem("tasks", JSON.stringify(updatedTasks));
   };
 
   // function to handle editing a task
@@ -19,6 +24,10 @@ const Tasks = () => {
     const updatedTask = prompt("Edit Task:", tasks[id]); // prompt user to edit task
     if (updatedTask) {
       dispatch(editTask(id, updatedTask)); // dispatch the editTask action
+      //update the task in local storage
+      const currentTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+      currentTasks[id] = updatedTask;
+      localStorage.setItem("tasks", JSON.stringify(currentTasks));
     }
   };
 

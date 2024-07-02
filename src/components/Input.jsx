@@ -1,5 +1,5 @@
 // necessryy dependencies
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { addTask } from "../redux/actions";
 
@@ -9,10 +9,19 @@ const Input = () => {
   // get the dispatch function from redux to dispatch actions
   const dispatch = useDispatch();
 
+  // adding items in local storage
+  useEffect(() => {
+    const savedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    savedTasks.forEach((task) => dispatch(addTask(task)));
+  }, [dispatch]);
+
   // ffunction to handle adding task
   const handleAddTask = () => {
     if (task) {
       dispatch(addTask(task)); // dispatch the addTask action
+      // save the new task to local storage
+      const currentTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+      localStorage.setItem("tasks", JSON.stringify([...currentTasks, task]));
       setTask(""); // Clear the input field
     }
   };
